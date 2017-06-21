@@ -3,8 +3,8 @@
 #include <QtGui>
 #include <QLabel>
 #include <QDebug>
-#include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QFileDialog>
 #include "tablica.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     // stworzenie nowej tablicy przechowującej labele (kwadratu)
     // tworzony jest obiekt dziedziczący po QFrame, w którym rysowane są kwadraty
     // obiekt tablica umożliwia dodanie i usunięcie kwadrtów
@@ -73,26 +72,32 @@ void MainWindow::on_addColButton_clicked()
 void MainWindow::on_deleteRowButton_pressed()
 {
     // usunięcie kwadratów z ostatniego wiersza (ostatnich labeli w liście)
-    for (int i = 0; i < tablice.at(iteratorTablic)->colNumber; i++)
+    if(tablice.at(iteratorTablic)->rowNumber > 1)
     {
-        tablice.at(iteratorTablic)->squareNumber--;
-        tablice.at(iteratorTablic)->deleteLabel(tablice.at(iteratorTablic)->squareNumber);
+        for (int i = 0; i < tablice.at(iteratorTablic)->colNumber; i++)
+        {
+            tablice.at(iteratorTablic)->squareNumber--;
+            tablice.at(iteratorTablic)->deleteLabel(tablice.at(iteratorTablic)->squareNumber);
+        }
+        tablice.at(iteratorTablic)->rowNumber--;
+        update();
     }
-    tablice.at(iteratorTablic)->rowNumber--;
-    update();
 }
 
 void MainWindow::on_deleteColButton_pressed()
 {
     // usunięcie kwadratów z ostatniej kolumny
-    for (int i = 0; i < tablice.at(iteratorTablic)->rowNumber; i++)
+    if(tablice.at(iteratorTablic)->colNumber > 1)
     {
-        // dla i = 0 ostatni element w liście
-        tablice.at(iteratorTablic)->deleteLabel((tablice.at(iteratorTablic)->squareNumber - 1) - i * tablice.at(iteratorTablic)->colNumber);
+        for (int i = 0; i < tablice.at(iteratorTablic)->rowNumber; i++)
+        {
+            // dla i = 0 ostatni element w liście
+            tablice.at(iteratorTablic)->deleteLabel((tablice.at(iteratorTablic)->squareNumber - 1) - i * tablice.at(iteratorTablic)->colNumber);
+        }
+        tablice.at(iteratorTablic)->squareNumber -= tablice.at(iteratorTablic)->rowNumber;
+        tablice.at(iteratorTablic)->colNumber--;
+        update();
     }
-    tablice.at(iteratorTablic)->squareNumber -= tablice.at(iteratorTablic)->rowNumber;
-    tablice.at(iteratorTablic)->colNumber--;
-    update();
 }
 
 void MainWindow::on_move_right_button_pressed()
@@ -115,6 +120,12 @@ void MainWindow::on_dodajTablice_pressed(){
     tablice.push_back(tablica);
     tablice.at(iteratorTablic)->hide();
     iteratorTablic = tablice.size()-1;
+    update();
+}
+
+void MainWindow::on_pictureRead_pressed(){
+    QPixmap pixmap(openFile());
+    tablice.at(0)->labelList.at(0)->setPixmap(pixmap);
     update();
 }
 
@@ -160,15 +171,20 @@ void MainWindow::paintEvent(QPaintEvent *e)
         tablice.at(iteratorTablic)->labelList.at(i)->show();
     }
 
-    //QGraphicsScene * scene = new QGraphicsScene(this);
-       // QImage image("C:/Users/Agata/Desktop/logoApka.png");
-
-        //bool a = image.isNull();
-        //QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-
-        //scene->addItem(item);
-
-        //ui->graphicsView->setScene( scene );
-        //ui->graphicsView->show();
 
 }
+
+
+QString MainWindow::openFile()
+  {
+    QString filename =  QFileDialog::getOpenFileName(
+          this,
+          "Open Document",
+          QDir::currentPath(),
+          "All files (*.*) ;; Document files (*.doc *.rtf);; PNG files (*.png)");
+
+    if( !filename.isNull() )
+    {
+      return filename;
+    }
+  }

@@ -22,7 +22,7 @@ Tablica::Tablica(QWidget *parent):
 // funkcja dodająca nowy label do listy
 void Tablica::addLabel(int n)
 {
-    QPixmap pixmap("C:/Users/Agata/Desktop/logoApka.png");
+    QPixmap pixmap("C:/Users/slimak989/Desktop/tablice/jablko.jpg");
     labelList.append(new QLabel(this));
     labelList.at(n)->setPixmap(pixmap);
     //labelList.at(n)->setText(QString::number(n));
@@ -30,6 +30,8 @@ void Tablica::addLabel(int n)
     labelList.at(n)->setStyleSheet("QLabel { background-color : yellow; color : blue; }");
     squareNumber++;
 }
+
+
 
 // funkcja usuwająca label z listy
 void Tablica::deleteLabel(int n)

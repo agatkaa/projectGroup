@@ -35,6 +35,10 @@ private slots:
 
     void on_dodajTablice_pressed();
 
+    void on_pictureRead_pressed();
+
+  QString openFile();
+
 private:
     Ui::MainWindow *ui;
     QLabel *label;

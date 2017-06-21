@@ -105,14 +105,17 @@
      <string>Nowa tablica</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QPushButton" name="pictureRead">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>350</y>
-      <width>121</width>
-      <height>121</height>
+      <x>20</x>
+      <y>550</y>
+      <width>111</width>
+      <height>23</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>Wczytaj obrazek</string>
     </property>
    </widget>
   </widget>
