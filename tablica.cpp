@@ -23,10 +23,8 @@ Tablica::Tablica(QWidget *parent):
 // funkcja dodająca nowy label do listy
 void Tablica::addLabel(int n)
 {
-    QPixmap pixmap("C:/Users/slimak989/Desktop/tablice/jablko.jpg");
     ClickableLabel* mylabel = new ClickableLabel(this);
     labelList.append(mylabel);
-    labelList.at(n)->setPixmap(pixmap);
     //labelList.at(n)->setText(QString::number(n));
     labelList.at(n)->setAlignment(Qt::AlignCenter);
     labelList.at(n)->setStyleSheet("QLabel { background-color : yellow; color : blue; }");

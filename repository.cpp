@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QString>
+#include <QDir>
 //sudo apt-get install sqlite3
 //sudo apt-get install libsqlite3-dev
 
@@ -29,14 +30,19 @@ Repository::Repository()
     }
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+
 }
+
 
 std::vector<Image*> Repository::getImages()
 {
     std::vector<Image*> images;
+    QDir dir;
+    dir.cdUp();
+    QString path = dir.absolutePath() + "/projectGroup/assets/image1.png";
     Image* image = new Image();
     image->id = 1;
-    image->fileName = "C:/Users/Agata/Pictures/58fe5d26aa.jpg";
+    image->fileName = path;
     images.push_back(image);
     return images;
 }
