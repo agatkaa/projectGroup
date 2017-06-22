@@ -1,13 +1,14 @@
 #ifndef REPOSITORY_H
 #define REPOSITORY_H
 #include <list>
+#include <vector>
 #include "image.h"
 
 class Repository
 {
 public:
     Repository();
-    std::list<Image*> getImages();
+    std::vector<Image*> getImages();
 };
 
 #endif // REPOSITORY_H

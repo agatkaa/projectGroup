@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QDebug>
 #include <QFrame>
+#include <clickablelabel.h>
 
 Tablica::Tablica(QWidget *parent):
     QFrame(parent)
@@ -23,15 +24,15 @@ Tablica::Tablica(QWidget *parent):
 void Tablica::addLabel(int n)
 {
     QPixmap pixmap("C:/Users/slimak989/Desktop/tablice/jablko.jpg");
-    labelList.append(new QLabel(this));
+    ClickableLabel* mylabel = new ClickableLabel(this);
+    labelList.append(mylabel);
     labelList.at(n)->setPixmap(pixmap);
     //labelList.at(n)->setText(QString::number(n));
     labelList.at(n)->setAlignment(Qt::AlignCenter);
     labelList.at(n)->setStyleSheet("QLabel { background-color : yellow; color : blue; }");
     squareNumber++;
+
 }
-
-
 
 // funkcja usuwająca label z listy
 void Tablica::deleteLabel(int n)

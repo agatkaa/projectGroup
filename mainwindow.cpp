@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 #include "tablica.h"
+#include <clickablelabel.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -61,7 +62,7 @@ void MainWindow::on_addColButton_clicked()
     for (int i = 0; i < tablice.at(iteratorTablic)->rowNumber; i++)
     {
         // dodanie labela do listy
-        tablice.at(iteratorTablic)->labelList.insert(tablice.at(iteratorTablic)->colNumber-1+i*tablice.at(iteratorTablic)->colNumber, new QLabel(tablice.at(iteratorTablic)));
+        tablice.at(iteratorTablic)->labelList.insert(tablice.at(iteratorTablic)->colNumber-1+i*tablice.at(iteratorTablic)->colNumber, new ClickableLabel(tablice.at(iteratorTablic)));
         // dodanie nowego labela do gui
         tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->colNumber-1+i*tablice.at(iteratorTablic)->colNumber);
     }
@@ -125,7 +126,7 @@ void MainWindow::on_dodajTablice_pressed(){
 
 void MainWindow::on_pictureRead_pressed(){
     QPixmap pixmap(openFile());
-    tablice.at(0)->labelList.at(0)->setPixmap(pixmap);
+    tablice.at(0)->labelList.at(3)->setPixmap(pixmap);
     update();
 }
 
@@ -175,7 +176,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
 }
 
 
-QString MainWindow::openFile()
+ QString MainWindow::openFile()
   {
     QString filename =  QFileDialog::getOpenFileName(
           this,

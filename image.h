@@ -1,13 +1,13 @@
 #ifndef IMAGE_H
 #define IMAGE_H
-#include <string>
+#include <QString>
 
 class Image
 {
 public:
     Image();
     int id;
-    std::string fileName;
+    QString fileName;
 };
 
 #endif // IMAGE_H
