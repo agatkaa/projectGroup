@@ -37,7 +37,7 @@ private slots:
 
     void on_pictureRead_pressed();
 
-  QString openFile();
+     QString openFile();
 
 private:
     Ui::MainWindow *ui;

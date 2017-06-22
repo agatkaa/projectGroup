@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QWidget>
 #include <QFrame>
-#include <QLabel>
+#include <clickablelabel.h>
+
 
 class Tablica : public QFrame
 {
