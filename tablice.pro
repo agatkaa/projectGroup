@@ -35,3 +35,11 @@ HEADERS  += mainwindow.h \
     image.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += db/projekt_grupowy.sql \
+    config.ini \
+    resource.qrc
+
+RESOURCES     = resource.qrc
+
+LIBS += -lsqlite3
