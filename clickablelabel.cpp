@@ -25,6 +25,8 @@ void ClickableLabel::slotClicked()
 
    QPixmap pixmap(img->fileName);
    this->setPixmap(pixmap);
+   this->setScaledContents( true );
+   this->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
    update();
 }
 
