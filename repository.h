@@ -2,13 +2,13 @@
 #define REPOSITORY_H
 #include <list>
 #include <vector>
-#include <sqlite3.h>
+#include <QSqlDatabase>
 #include "image.h"
 
 class Repository
 {
 private:
-    sqlite3* mDB;
+    QSqlDatabase mDB;
     QString mImageLocationDir;
 public:
     Repository();

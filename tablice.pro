@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -43,5 +43,3 @@ DISTFILES += db/projekt_grupowy.sql \
     resource.qrc
 
 RESOURCES     = resource.qrc
-
-LIBS += -lsqlite3
