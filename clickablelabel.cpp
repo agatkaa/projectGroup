@@ -32,12 +32,11 @@ void ClickableLabel::slotClicked()
 
 QString ClickableLabel::openFile()
  {
-   QString filename =  QFileDialog::getOpenFileName(
-         this,
-         "Open Document",
-         QDir::currentPath(),
-         "All files (*.*) ;; Document files (*.doc *.rtf);; PNG files (*.png)");
-
+    QString filename =  QFileDialog::getOpenFileName(
+              this,
+              "Open Document",
+              QDir::currentPath(),
+              "Image Files (*.png *.jpg *.bmp *.jpeg)");
    if( !filename.isNull() )
    {
      return filename;
