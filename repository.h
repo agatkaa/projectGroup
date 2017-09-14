@@ -10,10 +10,18 @@ class Repository
 private:
     QSqlDatabase mDB;
     QString mImageLocationDir;
+    //lista z nazwami obrazkow
+    QSet<QString> getImagesNamesFromImageLocation();
+    void addImages(QSet<QString>& imagesNames);
+    void removeImages(QSet<QString>& imagesNames);
 public:
     Repository();
     ~Repository();
-    std::vector<Image*> getImages();
+    //pobranie wszystkich obrazkow z bazy
+    QList<Image*> getImages();
+
+    //synchronizacja obrazkow w bazie z folderem, do bazy sa obrazki ktorych jeszcze tam nie bylo
+    void syncImages();
 };
 
 #endif // REPOSITORY_H

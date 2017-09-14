@@ -23,7 +23,7 @@ void ClickableLabel::slotClicked()
    Repository* repository = new Repository();
    Image* img = repository->getImages()[0];
 
-   QPixmap pixmap(img->fileName);
+   QPixmap pixmap(img->fullFileName);
    this->setPixmap(pixmap);
    this->setScaledContents( true );
    this->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );

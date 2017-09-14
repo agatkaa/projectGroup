@@ -8,6 +8,7 @@ public:
     Image();
     int id;
     QString fileName;
+    QString fullFileName;
 };
 
 #endif // IMAGE_H

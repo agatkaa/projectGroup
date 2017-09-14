@@ -6,7 +6,8 @@
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 #include "tablica.h"
-#include <clickablelabel.h>
+#include "clickablelabel.h"
+#include "repository.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,20 +23,16 @@ MainWindow::MainWindow(QWidget *parent) :
     iteratorTablic = 0;
     tablice.push_back(tablica);
 
-     //fragment z dodaniem listy z obrazkami z folderu
-    QSettings settings(QString(":/config.ini"), QSettings::IniFormat);
-    QDir export_folder(settings.value("db/image_location_dir").toString());
-    export_folder.setNameFilters(QStringList()<<"*.png");
-    QStringList fileList = export_folder.entryList();
+    Repository r;
+    r.syncImages();
+    QList<Image*> images = r.getImages();
 
     // ustawienie położenia i wielkości okna do rysowania
-     QString name;
 
     QVector <QListWidgetItem*> items;
-    for (int i=0;i<fileList.size();i++){
-        name = fileList.at(i);
-        items.push_back(new QListWidgetItem(name));
-        items[i]->setIcon(QIcon(settings.value("db/image_location_dir").toString()+name));
+    for (int i=0;i<images.size();i++){
+        items.push_back(new QListWidgetItem(images.at(i)->fileName));
+        items[i]->setIcon(QIcon(images.at(i)->fullFileName));
         ui->listWidget->addItem(items[i]);
     }
     //koniec tego panelu z zawartoscia folderu assets
