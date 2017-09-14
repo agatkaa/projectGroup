@@ -21,7 +21,24 @@ MainWindow::MainWindow(QWidget *parent) :
     tablica = new Tablica (this);
     iteratorTablic = 0;
     tablice.push_back(tablica);
+
+     //fragment z dodaniem listy z obrazkami z folderu
+    QSettings settings(QString(":/config.ini"), QSettings::IniFormat);
+    QDir export_folder(settings.value("db/image_location_dir").toString());
+    export_folder.setNameFilters(QStringList()<<"*.png");
+    QStringList fileList = export_folder.entryList();
+
     // ustawienie położenia i wielkości okna do rysowania
+     QString name;
+
+    QVector <QListWidgetItem*> items;
+    for (int i=0;i<fileList.size();i++){
+        name = fileList.at(i);
+        items.push_back(new QListWidgetItem(name));
+        items[i]->setIcon(QIcon(settings.value("db/image_location_dir").toString()+name));
+        ui->listWidget->addItem(items[i]);
+    }
+    //koniec tego panelu z zawartoscia folderu assets
 
     update();
 }
