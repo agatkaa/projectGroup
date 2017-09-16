@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QGraphicsScene>
 #include "tablica.h"
+#include <QListWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -37,7 +38,9 @@ private slots:
 
     void on_pictureRead_pressed();
 
-     QString openFile();
+    QString openFile();
+
+    void on_listWidget_itemPressed(QListWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;

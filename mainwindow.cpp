@@ -8,12 +8,18 @@
 #include "tablica.h"
 #include "clickablelabel.h"
 #include "repository.h"
+#include <QDrag>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // umożliwienia przesuwania obrazków z listy
+    ui->listWidget->setDragEnabled(true);
+
     // stworzenie nowej tablicy przechowującej labele (kwadratu)
     // tworzony jest obiekt dziedziczący po QFrame, w którym rysowane są kwadraty
     // obiekt tablica umożliwia dodanie i usunięcie kwadrtów
@@ -203,3 +209,20 @@ void MainWindow::paintEvent(QPaintEvent *e)
       return filename;
     }
   }
+
+ void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
+ {
+     QDrag *drag = new QDrag(item->listWidget());
+     QMimeData *mime= new QMimeData;
+
+     QString string (item->text());
+     mime->setText(string);
+     drag->setMimeData(mime);
+
+     QIcon qicon = item->icon();
+     QPixmap pixmap = qicon.pixmap(24,24);
+     drag->setPixmap(pixmap);
+     drag->setHotSpot(QPoint(15,15));
+
+     drag->exec();
+ }
