@@ -28,7 +28,6 @@ public:
      QString openFile();
 
 private:
-     QString imageLocationDir;
 };
 
 #endif // CLICKABLELABEL_H

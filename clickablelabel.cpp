@@ -17,9 +17,6 @@ ClickableLabel::ClickableLabel(QWidget* parent, Qt::WindowFlags f)
 
      connect(this, SIGNAL(clicked()),this, SLOT(slotClicked()));
 
-     QSettings settings(QString(":/config.ini"), QSettings::IniFormat);
-     imageLocationDir = settings.value("db/image_location_dir").toString();
-
      setAcceptDrops(true);
 }
 
@@ -64,7 +61,7 @@ void ClickableLabel::dragEnterEvent(QDragEnterEvent *event)
 
 void ClickableLabel::dropEvent(QDropEvent *event)
 {
-    QString imageLocation = imageLocationDir + event->mimeData()->text();
+    QString imageLocation = event->mimeData()->text();
     QPixmap pixmap(imageLocation);
     this->setPixmap(pixmap);
     this->setScaledContents( true );

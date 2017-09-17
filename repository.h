@@ -4,6 +4,7 @@
 #include <vector>
 #include <QSqlDatabase>
 #include "image.h"
+#include "table.h"
 
 class Repository
 {
@@ -14,6 +15,9 @@ private:
     QSet<QString> getImagesNamesFromImageLocation();
     void addImages(QSet<QString>& imagesNames);
     void removeImages(QSet<QString>& imagesNames);
+
+    int updateTable(Table& table);
+    int addTable(Table& table);
 public:
     Repository();
     ~Repository();
@@ -22,6 +26,9 @@ public:
 
     //synchronizacja obrazkow w bazie z folderem, do bazy sa obrazki ktorych jeszcze tam nie bylo
     void syncImages();
+
+    int saveTable(Table& table);
+    Table getTable(int id);
 };
 
 #endif // REPOSITORY_H

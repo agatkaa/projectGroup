@@ -7,6 +7,7 @@
 #include <QGraphicsScene>
 #include "tablica.h"
 #include <QListWidgetItem>
+#include "repository.h"
 
 namespace Ui {
 class MainWindow;
@@ -52,9 +53,10 @@ private:
     Tablica *tablica2;
     QList<Tablica*> tablice;
     int iteratorTablic;
+    Repository repository;
     void moveButton (QPushButton *button, int x, int y);
 
-
+    Tablica* currentTablica();
 };
 
 #endif // MAINWINDOW_H

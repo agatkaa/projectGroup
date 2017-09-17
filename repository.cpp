@@ -6,6 +6,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QDate>
 
 Repository::Repository()
 {
@@ -73,6 +74,10 @@ void Repository::syncImages()
     //obrazki ktore sa w bazie ale nie ma ich w pliku
     QSet<QString> imagesToRemove = QSet<QString>(currentImagesNames).subtract(images);
     removeImages(imagesToRemove);
+
+    for(int i = 0; i < currentImages.size(); ++i) {
+        delete currentImages.at(i);
+    }
 }
 
 QSet<QString> Repository::getImagesNamesFromImageLocation()
@@ -119,5 +124,98 @@ void Repository::removeImages(QSet<QString>& imagesNames)
         else {
             qDebug() << "error: " << query.lastError() << " while removing image: " << *it;
         }
+    }
+}
+
+int Repository::saveTable(Table &table)
+{
+    int id;
+    if (table.id > 0)
+    {
+        id = updateTable(table);
+    }
+    else
+    {
+        id = addTable(table);
+    }
+    return id;
+}
+
+Table Repository::getTable(int id)
+{
+    Table table;
+    if (id < 0) {
+        qDebug() << "wrong table id " << id;
+    }
+    QSqlQuery query;
+    query.prepare("SELECT id, name, rowsNumber, colsNumber, lastUpdate FROM Tables WHERE id = :id");
+    query.bindValue(":id", id);
+    if (query.exec()) {
+        if (query.next()) {
+            table.id = query.value(0).toInt();
+            table.name = query.value(1).toString();
+            table.rowNumber = query.value(2).toInt();
+            table.colNumber = query.value(3).toInt();
+            table.lastUpdate = query.value(4).toDate();
+        }
+        else {
+            qDebug() << "nie znaleziono tablicy z id " << id << " w bazie danych";
+        }
+    }
+    else {
+        qDebug() << "error while getting table: " << id << ", " << query.lastError();
+    }
+    return table;
+}
+
+int Repository::updateTable(Table &table)
+{
+    Table current = getTable(table.id);
+    if (current.lastUpdate != table.lastUpdate) {
+        qDebug() << "cannot update table, someone modified it before you ";
+        return -1;
+    }
+    QSqlQuery query;
+    query.prepare("UPDATE Tables "
+                  "set name = :name "
+                  ", rowsNumber = :rowNumber "
+                  ", colsNumber = :colNumber "
+                  ", lastUpdate = :lastUpdate "
+                  "where id = :id ");
+    query.bindValue(":name", table.name);
+    query.bindValue(":rowNumber", table.rowNumber);
+    query.bindValue(":colNumber", table.colNumber);
+    query.bindValue(":lastUpdate", QDate::currentDate());
+    query.bindValue(":id", table.id);
+    if (query.exec())
+    {
+        qDebug() << "updated table " << table.displayName();
+        return table.id;
+    }
+    else
+    {
+        qDebug() << "error while updating table " << table.displayName()<< ", " << query.lastError();
+        return -1;
+    }
+}
+
+int Repository::addTable(Table &table)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO Tables(name, rowsNumber, colsNumber) VALUES (:name, :rowNumber, :colNumber)");
+    query.bindValue(":name", table.name);
+    query.bindValue(":rowNumber", table.rowNumber);
+    query.bindValue(":colNumber", table.colNumber);
+    if (query.exec())
+    {
+        int id = query.lastInsertId().toInt();
+        table.id = id;
+        qDebug() << "added table " << table.displayName();
+        return id;
+    }
+    else
+    {
+        qDebug() << "Error while adding table " << table.displayName() << ", " << query.lastError();
+        return -1;
     }
 }
