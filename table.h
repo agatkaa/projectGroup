@@ -15,7 +15,6 @@ public:
     QDate lastUpdate;
 
     QString displayName();
-    int squareNumber;
 };
 
 #endif // TABLE_H

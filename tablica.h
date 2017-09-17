@@ -23,6 +23,7 @@ public:
     void saveTable();
     QList <QLabel *> labelList;
     Table table;
+    int squareNumber;
 private:
     Repository* repository;
 };

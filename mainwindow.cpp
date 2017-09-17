@@ -70,7 +70,7 @@ void MainWindow::on_addRowButton_pressed()
 
     for (int i=0; i < tablice.at(iteratorTablic)->table.colNumber; i++)
     {
-        tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->table.squareNumber);
+        tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->squareNumber);
     }
     tablice.at(iteratorTablic)->table.rowNumber++;
     currentTablica()->saveTable();
@@ -101,8 +101,8 @@ void MainWindow::on_deleteRowButton_pressed()
     {
         for (int i = 0; i < tablice.at(iteratorTablic)->table.colNumber; i++)
         {
-            tablice.at(iteratorTablic)->table.squareNumber--;
-            tablice.at(iteratorTablic)->deleteLabel(tablice.at(iteratorTablic)->table.squareNumber);
+            tablice.at(iteratorTablic)->squareNumber--;
+            tablice.at(iteratorTablic)->deleteLabel(tablice.at(iteratorTablic)->squareNumber);
         }
         tablice.at(iteratorTablic)->table.rowNumber--;
         currentTablica()->saveTable();
@@ -118,9 +118,9 @@ void MainWindow::on_deleteColButton_pressed()
         for (int i = 0; i < tablice.at(iteratorTablic)->table.rowNumber; i++)
         {
             // dla i = 0 ostatni element w liście
-            tablice.at(iteratorTablic)->deleteLabel((tablice.at(iteratorTablic)->table.squareNumber - 1) - i * tablice.at(iteratorTablic)->table.colNumber);
+            tablice.at(iteratorTablic)->deleteLabel((tablice.at(iteratorTablic)->squareNumber - 1) - i * tablice.at(iteratorTablic)->table.colNumber);
         }
-        tablice.at(iteratorTablic)->table.squareNumber -= tablice.at(iteratorTablic)->table.rowNumber;
+        tablice.at(iteratorTablic)->squareNumber -= tablice.at(iteratorTablic)->table.rowNumber;
         tablice.at(iteratorTablic)->table.colNumber--;
         currentTablica()->saveTable();
         update();

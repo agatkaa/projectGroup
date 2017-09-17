@@ -13,7 +13,7 @@ Tablica::Tablica(QWidget *parent, Repository* repository):
     // zainicjowanie tablicy 3x3
     table.rowNumber = 3;
     table.colNumber = 3;
-    table.squareNumber = 0;
+    squareNumber = 0;
 
     saveTable();
 
@@ -39,7 +39,7 @@ void Tablica::addLabel(int n)
     //labelList.at(n)->setText(QString::number(n));
     labelList.at(n)->setAlignment(Qt::AlignCenter);
     labelList.at(n)->setStyleSheet("QLabel { background-color : yellow; color : blue; }");
-    table.squareNumber++;
+    squareNumber++;
 
 }
 
@@ -52,8 +52,6 @@ void Tablica::deleteLabel(int n)
 
 void Tablica::saveTable()
 {
-    int squarenumber = table.squareNumber;
     int id = repository->saveTable(table);
     table = repository->getTable(id);
-    table.squareNumber = squarenumber;
 }
