@@ -20,9 +20,14 @@ signals:
 
 protected:
     void mousePressEvent(QMouseEvent* event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event);
 
 public:
      QString openFile();
+
+private:
 };
 
 #endif // CLICKABLELABEL_H

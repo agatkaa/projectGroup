@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QGraphicsScene>
 #include "tablica.h"
+#include <QListWidgetItem>
+#include "repository.h"
 
 namespace Ui {
 class MainWindow;
@@ -37,7 +39,9 @@ private slots:
 
     void on_pictureRead_pressed();
 
-     QString openFile();
+    QString openFile();
+
+    void on_listWidget_itemPressed(QListWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;
@@ -49,9 +53,10 @@ private:
     Tablica *tablica2;
     QList<Tablica*> tablice;
     int iteratorTablic;
+    Repository repository;
     void moveButton (QPushButton *button, int x, int y);
 
-
+    Tablica* currentTablica();
 };
 
 #endif // MAINWINDOW_H

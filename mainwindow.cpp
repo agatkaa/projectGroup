@@ -6,22 +6,32 @@
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 #include "tablica.h"
-#include <clickablelabel.h>
+#include "clickablelabel.h"
+#include "repository.h"
+#include <QDrag>
+#include <QDebug>
+
+Q_DECLARE_METATYPE(Image*)
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // umożliwienia przesuwania obrazków z listy
+    ui->listWidget->setDragEnabled(true);
+
     // stworzenie nowej tablicy przechowującej labele (kwadratu)
     // tworzony jest obiekt dziedziczący po QFrame, w którym rysowane są kwadraty
     // obiekt tablica umożliwia dodanie i usunięcie kwadrtów
 
     // !!!do przełączania między tablicami najlepiej stworzyć listę wskźników na tablice i zamiast odwoływać się do tablic odwoływać się do pozycji w liście
-    tablica = new Tablica (this);
+    tablica = new Tablica (this, &repository);
     iteratorTablic = 0;
     tablice.push_back(tablica);
-    // ustawienie położenia i wielkości okna do rysowania
+
+
 
     update();
 }
@@ -46,26 +56,28 @@ MainWindow::~MainWindow()
 void MainWindow::on_addRowButton_pressed()
 {
 
-    for (int i=0; i < tablice.at(iteratorTablic)->colNumber; i++)
+    for (int i=0; i < tablice.at(iteratorTablic)->table.colNumber; i++)
     {
         tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->squareNumber);
     }
-    tablice.at(iteratorTablic)->rowNumber++;
+    tablice.at(iteratorTablic)->table.rowNumber++;
+    currentTablica()->saveTable();
     update();
 }
 
 void MainWindow::on_addColButton_clicked()
 {
-    tablice.at(iteratorTablic)->colNumber++;
+    tablice.at(iteratorTablic)->table.colNumber++;
 
     // dodanie labeli w ostatniej kolumnie
-    for (int i = 0; i < tablice.at(iteratorTablic)->rowNumber; i++)
+    for (int i = 0; i < tablice.at(iteratorTablic)->table.rowNumber; i++)
     {
         // dodanie labela do listy
-        tablice.at(iteratorTablic)->labelList.insert(tablice.at(iteratorTablic)->colNumber-1+i*tablice.at(iteratorTablic)->colNumber, new ClickableLabel(tablice.at(iteratorTablic)));
+        tablice.at(iteratorTablic)->labelList.insert(tablice.at(iteratorTablic)->table.colNumber-1+i*tablice.at(iteratorTablic)->table.colNumber, new ClickableLabel(tablice.at(iteratorTablic)));
         // dodanie nowego labela do gui
-        tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->colNumber-1+i*tablice.at(iteratorTablic)->colNumber);
+        tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->table.colNumber-1+i*tablice.at(iteratorTablic)->table.colNumber);
     }
+    currentTablica()->saveTable();
     // wyrysowanie ekranu
     update();
 }
@@ -73,14 +85,15 @@ void MainWindow::on_addColButton_clicked()
 void MainWindow::on_deleteRowButton_pressed()
 {
     // usunięcie kwadratów z ostatniego wiersza (ostatnich labeli w liście)
-    if(tablice.at(iteratorTablic)->rowNumber > 1)
+    if(tablice.at(iteratorTablic)->table.rowNumber > 1)
     {
-        for (int i = 0; i < tablice.at(iteratorTablic)->colNumber; i++)
+        for (int i = 0; i < tablice.at(iteratorTablic)->table.colNumber; i++)
         {
             tablice.at(iteratorTablic)->squareNumber--;
             tablice.at(iteratorTablic)->deleteLabel(tablice.at(iteratorTablic)->squareNumber);
         }
-        tablice.at(iteratorTablic)->rowNumber--;
+        tablice.at(iteratorTablic)->table.rowNumber--;
+        currentTablica()->saveTable();
         update();
     }
 }
@@ -88,15 +101,16 @@ void MainWindow::on_deleteRowButton_pressed()
 void MainWindow::on_deleteColButton_pressed()
 {
     // usunięcie kwadratów z ostatniej kolumny
-    if(tablice.at(iteratorTablic)->colNumber > 1)
+    if(tablice.at(iteratorTablic)->table.colNumber > 1)
     {
-        for (int i = 0; i < tablice.at(iteratorTablic)->rowNumber; i++)
+        for (int i = 0; i < tablice.at(iteratorTablic)->table.rowNumber; i++)
         {
             // dla i = 0 ostatni element w liście
-            tablice.at(iteratorTablic)->deleteLabel((tablice.at(iteratorTablic)->squareNumber - 1) - i * tablice.at(iteratorTablic)->colNumber);
+            tablice.at(iteratorTablic)->deleteLabel((tablice.at(iteratorTablic)->squareNumber - 1) - i * tablice.at(iteratorTablic)->table.colNumber);
         }
-        tablice.at(iteratorTablic)->squareNumber -= tablice.at(iteratorTablic)->rowNumber;
-        tablice.at(iteratorTablic)->colNumber--;
+        tablice.at(iteratorTablic)->squareNumber -= tablice.at(iteratorTablic)->table.rowNumber;
+        tablice.at(iteratorTablic)->table.colNumber--;
+        currentTablica()->saveTable();
         update();
     }
 }
@@ -117,7 +131,7 @@ void MainWindow::on_move_left_button_pressed()
 }
 
 void MainWindow::on_dodajTablice_pressed(){
-    tablica = new Tablica (this);
+    tablica = new Tablica (this, &repository);
     tablice.push_back(tablica);
     tablice.at(iteratorTablic)->hide();
     iteratorTablic = tablice.size()-1;
@@ -125,7 +139,14 @@ void MainWindow::on_dodajTablice_pressed(){
 }
 
 void MainWindow::on_pictureRead_pressed(){
-    QPixmap pixmap(openFile());
+    QString sourceFile = openFile();
+    QFileInfo QFileinfo(sourceFile);
+
+    QPixmap pixmap(sourceFile);
+    QSettings settings(QString(":/config.ini"), QSettings::IniFormat);
+    QString outputFile = settings.value("db/image_location_dir").toString()+"/"+QFileinfo.fileName();
+    bool retval = QFile::copy(sourceFile, outputFile);
+
     tablice.at(0)->labelList.at(3)->setPixmap(pixmap);
     update();
 }
@@ -150,8 +171,8 @@ void MainWindow::paintEvent(QPaintEvent *e)
     int height = tablice.at(iteratorTablic)->height();
     int margin = 10;
 
-    int labelMaksWidth = width/tablice.at(iteratorTablic)->rowNumber;
-    int labelMaksHeight = height/tablice.at(iteratorTablic)->colNumber;
+    int labelMaksWidth = width/tablice.at(iteratorTablic)->table.rowNumber;
+    int labelMaksHeight = height/tablice.at(iteratorTablic)->table.colNumber;
 
     // znalezienie największego boku kwadratu mieszczącego się w oknie do rysowania
     int labelSize;
@@ -166,11 +187,27 @@ void MainWindow::paintEvent(QPaintEvent *e)
     // wyrysowanie wszystkich kwadratów z listy
     for (int i = 0; i < tablice.at(iteratorTablic)->labelList.length(); i++)
     {
-        int row = i/tablice.at(iteratorTablic)->colNumber;
-        int col = i%tablice.at(iteratorTablic)->colNumber;
+        int row = i/tablice.at(iteratorTablic)->table.colNumber;
+        int col = i%tablice.at(iteratorTablic)->table.colNumber;
         tablice.at(iteratorTablic)->labelList.at(i)->setGeometry(QRect(col*(labelSize),row*(labelSize),labelSize-margin,labelSize-margin));
         tablice.at(iteratorTablic)->labelList.at(i)->show();
     }
+
+    repository.syncImages();
+    QList<Image*> images = repository.getImages();
+
+    // ustawienie położenia i wielkości okna do rysowania
+
+    ui->listWidget->clear();
+    for (int i=0;i<images.size();i++){
+        QListWidgetItem* item = new QListWidgetItem(images.at(i)->fileName);
+        item->setIcon(QIcon(images.at(i)->fullFileName));
+        item->setData(Qt::UserRole, qVariantFromValue(images.at(i)));
+
+        ui->listWidget->addItem(item);
+    }
+    //koniec tego panelu z zawartoscia folderu assets
+
 
 
 }
@@ -189,3 +226,27 @@ void MainWindow::paintEvent(QPaintEvent *e)
       return filename;
     }
   }
+
+ void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
+ {
+     QDrag *drag = new QDrag(item->listWidget());
+     QMimeData *mime= new QMimeData;
+
+     Image* image = (Image*) item->data(Qt::UserRole).value<Image*>();
+
+     QString string (image->fullFileName);
+     mime->setText(string);
+     drag->setMimeData(mime);
+
+     QIcon qicon = item->icon();
+     QPixmap pixmap = qicon.pixmap(24,24);
+     drag->setPixmap(pixmap);
+     drag->setHotSpot(QPoint(15,15));
+
+     drag->exec();
+ }
+
+ Tablica* MainWindow::currentTablica()
+ {
+     return tablice.at(iteratorTablic);
+ }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>691</width>
+    <width>997</width>
     <height>706</height>
    </rect>
   </property>
@@ -118,13 +118,23 @@
      <string>Wczytaj obrazek</string>
     </property>
    </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>10</y>
+      <width>256</width>
+      <height>431</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>691</width>
+     <width>997</width>
      <height>21</height>
     </rect>
    </property>

@@ -28,13 +28,15 @@ SOURCES += main.cpp\
     tablica.cpp \
     repository.cpp \
     image.cpp \
-    clickablelabel.cpp
+    clickablelabel.cpp \
+    table.cpp
 
 HEADERS  += mainwindow.h \
     tablica.h \
     image.h \
     repository.h \
-    clickablelabel.h
+    clickablelabel.h \
+    table.h
 
 FORMS    += mainwindow.ui
 
