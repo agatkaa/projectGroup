@@ -3,6 +3,10 @@
 
 #include <QLabel>
 #include <QWidget>
+
+class Tablica;
+#include "table.h"
+#include "repository.h"
 #include <Qt>
 
 class ClickableLabel : public QLabel {
@@ -10,7 +14,10 @@ class ClickableLabel : public QLabel {
 
 public:
     explicit ClickableLabel(QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+    int xPosition;
+    int yPosition;
     ~ClickableLabel();
+    Tablica* tab;
 
 public slots:
     void slotClicked();
@@ -27,7 +34,12 @@ protected:
 public:
      QString openFile();
 
+     void setXPosition(int value);
+
+     void setYPosition(int value);
+
 private:
+
 };
 
 #endif // CLICKABLELABEL_H

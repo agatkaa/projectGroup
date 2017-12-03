@@ -22,6 +22,7 @@ public:
     ~MainWindow();
     void paintEvent(QPaintEvent *e);
 
+
 private slots:
     void on_addRowButton_pressed();
 
@@ -48,15 +49,17 @@ private:
     QLabel *label;
     QPushButton *button1;
     QGraphicsScene *scene;
-
+    Tablica* currentTablica();
     Tablica *tablica;
     Tablica *tablica2;
-    QList<Tablica*> tablice;
-    int iteratorTablic;
+
     Repository repository;
     void moveButton (QPushButton *button, int x, int y);
 
-    Tablica* currentTablica();
+public:
+    QList<Tablica*> tablice;
+    int iteratorTablic;
+
 };
 
 #endif // MAINWINDOW_H

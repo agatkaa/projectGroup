@@ -31,14 +31,12 @@ MainWindow::MainWindow(QWidget *parent) :
     iteratorTablic = 0;
     tablice.push_back(tablica);
 
-<<<<<<< HEAD
 
-=======
     repository.syncImages();
     QList<Image*> images = repository.getImages();
 
     // ustawienie położenia i wielkości okna do rysowania
->>>>>>> b686a23a663dbed14e6d8f09bfaf65e971d56697
+
 
     for (int i=0;i<images.size();i++){
         QListWidgetItem* item = new QListWidgetItem(images.at(i)->fileName);
@@ -72,11 +70,12 @@ MainWindow::~MainWindow()
 void MainWindow::on_addRowButton_pressed()
 {
 
+    int row = tablice.at(iteratorTablic)->table.rowNumber++;
     for (int i=0; i < tablice.at(iteratorTablic)->table.colNumber; i++)
     {
-        tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->squareNumber);
+        tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->squareNumber,i,row);
     }
-    tablice.at(iteratorTablic)->table.rowNumber++;
+
     currentTablica()->saveTable();
     update();
 }
@@ -84,14 +83,15 @@ void MainWindow::on_addRowButton_pressed()
 void MainWindow::on_addColButton_clicked()
 {
     tablice.at(iteratorTablic)->table.colNumber++;
+    int col = tablice.at(iteratorTablic)->table.colNumber;
 
     // dodanie labeli w ostatniej kolumnie
     for (int i = 0; i < tablice.at(iteratorTablic)->table.rowNumber; i++)
     {
         // dodanie labela do listy
-        tablice.at(iteratorTablic)->labelList.insert(tablice.at(iteratorTablic)->table.colNumber-1+i*tablice.at(iteratorTablic)->table.colNumber, new ClickableLabel(tablice.at(iteratorTablic)));
+        tablice.at(iteratorTablic)->labelList.insert(col-1+i*col, new ClickableLabel(tablice.at(iteratorTablic)));
         // dodanie nowego labela do gui
-        tablice.at(iteratorTablic)->addLabel(tablice.at(iteratorTablic)->table.colNumber-1+i*tablice.at(iteratorTablic)->table.colNumber);
+        tablice.at(iteratorTablic)->addLabel(col-1+i*col,col-1,i);
     }
     currentTablica()->saveTable();
     // wyrysowanie ekranu

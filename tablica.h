@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QFrame>
+
 #include "clickablelabel.h"
 #include "table.h"
 #include "repository.h"
@@ -18,12 +19,13 @@ public:
     ~Tablica();
 
 public:
-    void addLabel(int n);
+    void addLabel(int n, int xPosition, int yPosition);
     void deleteLabel(int n);
     void saveTable();
-    QList <QLabel *> labelList;
+    QList <ClickableLabel *> labelList;
     Table table;
     int squareNumber;
+    void initializeTable();
 private:
     Repository* repository;
 };

@@ -1,9 +1,11 @@
+
 #include "tablica.h"
+#include <clickablelabel.h>
 #include <QtGui>
 #include <QLabel>
 #include <QDebug>
 #include <QFrame>
-#include <clickablelabel.h>
+
 
 Tablica::Tablica(QWidget *parent, Repository* repository):
     QFrame(parent)
@@ -16,11 +18,8 @@ Tablica::Tablica(QWidget *parent, Repository* repository):
     squareNumber = 0;
 
     saveTable();
+    initializeTable();
 
-    for (int i = 0; i < 9; i++)
-    {
-        addLabel(i);
-    }
 }
 
 Tablica::~Tablica()
@@ -32,13 +31,15 @@ Tablica::~Tablica()
 }
 
 // funkcja dodająca nowy label do listy
-void Tablica::addLabel(int n)
+void Tablica::addLabel(int n, int xPosition, int yPosition)
 {
     ClickableLabel* mylabel = new ClickableLabel(this);
     labelList.append(mylabel);
     //labelList.at(n)->setText(QString::number(n));
     labelList.at(n)->setAlignment(Qt::AlignCenter);
     labelList.at(n)->setStyleSheet("QLabel { background-color : yellow; color : blue; }");
+    labelList.at(n)->setXPosition(xPosition);
+    labelList.at(n)->setYPosition(yPosition);
     squareNumber++;
 
 }
@@ -54,4 +55,23 @@ void Tablica::saveTable()
 {
     int id = repository->saveTable(table);
     table = repository->getTable(id);
+
 }
+
+void Tablica::initializeTable()
+{
+    int x=0;
+    int y=0;
+
+    for (int i = 0; i < 9; i++)
+    {
+        addLabel(i,x,y);
+        x++;
+        if (x==table.rowNumber){
+            x=0;
+            y++;
+        }
+    }
+}
+
+

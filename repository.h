@@ -18,6 +18,9 @@ private:
 
     int updateTable(Table& table);
     int addTable(Table& table);
+
+    int checkImageInTable(Table &table, int x, int y);
+    int getImageIdFromPath(QString path);
 public:
     Repository();
     ~Repository();
@@ -26,7 +29,7 @@ public:
 
     //synchronizacja obrazkow w bazie z folderem, do bazy sa obrazki ktorych jeszcze tam nie bylo
     void syncImages();
-
+int saveImageInTable(int id, QString path, int x, int y);
     int saveTable(Table& table);
     Table getTable(int id);
 };

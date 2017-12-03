@@ -199,6 +199,78 @@ int Repository::updateTable(Table &table)
     }
 }
 
+int Repository::saveImageInTable(int id, QString path, int x, int y)
+{
+    Table current = getTable(id);
+    if (current.lastUpdate != current.lastUpdate) {
+        qDebug() << "cannot update table, someone modified it before you ";
+        return -1;
+    }
+
+    int imageInTable_id = checkImageInTable(current, x,y);
+    int image_id = getImageIdFromPath(path);
+
+    if (imageInTable_id!=-1){
+        QSqlQuery query;
+        query.prepare("UPDATE ImageInTable "
+                      "set Images_id = :Images_id "
+                      "where id=:id");
+        query.bindValue(":Images_id", image_id);
+        query.bindValue(":id", imageInTable_id);
+
+        if (query.exec())
+        {
+            qDebug() << "updated table " << current.displayName();
+            query.prepare("UPDATE Tables "
+                          "set lastUpdate = :lastUpdate "
+                          "where id = :id ");
+            query.bindValue(":lastUpdate", QDate::currentDate());
+            query.bindValue(":id", current.id);
+
+            if (query.exec())
+            {
+                qDebug() << "updated table " << current.displayName();
+                return current.id;
+            }
+            else
+            {
+                qDebug() << "error while updating table " << current.displayName()<< ", " << query.lastError();
+                return -1;
+            }
+            return current.id;
+        }
+        else
+        {
+            qDebug() << "error while updating table " << current.displayName()<< ", " << query.lastError();
+            return -1;
+        }
+
+
+    }
+    else {
+        QSqlQuery query;
+        query.prepare("INSERT INTO ImageInTable(Tables_id, Images_id, xPosition, yPosition)"
+                      " VALUES (:Tables_id, :Images_id, :xPosition, :yPosition)");
+        query.bindValue(":Tables_id", current.id);
+        query.bindValue(":Images_id", image_id);
+        query.bindValue(":xPosition", x);
+        query.bindValue(":yPosition", y);
+
+        if (query.exec())
+        {
+            qDebug() << "added location of image in table " << current.displayName();
+            return current.id;
+        }
+        else
+        {
+            qDebug() << "error while adding image location in table " << current.displayName()<< ", " << query.lastError();
+            return -1;
+        }
+        return current.id;
+
+    }
+}
+
 int Repository::addTable(Table &table)
 {
     QSqlQuery query;
@@ -217,5 +289,45 @@ int Repository::addTable(Table &table)
     {
         qDebug() << "Error while adding table " << table.displayName() << ", " << query.lastError();
         return -1;
+    }
+}
+
+int Repository::checkImageInTable(Table &table,int x, int y){
+
+    QSqlQuery query;
+    query.prepare("SELECT id,Images_id FROM ImageInTable WHERE Tables_id=:tableId AND xPosition=:x AND yPosition=:y");
+    query.bindValue(":tableId", table.id);
+    query.bindValue(":x", x);
+    query.bindValue(":y", y);
+    if (query.exec()) {
+        if (query.next()) {
+            return query.value(0).toInt();
+        }
+        else {
+            return -1;
+            qDebug() << "nie znaleziono zapisu dla tej pozycji w tablicy:  " << table.id << " w bazie danych";
+        }
+    }
+    else {
+        qDebug() << "error while getting table: " << ", " << query.lastError();
+    }
+}
+
+int Repository::getImageIdFromPath(QString path){
+
+    QSqlQuery query;
+    query.prepare("SELECT id FROM Images WHERE path=:path");
+    query.bindValue(":path", path);
+    if (query.exec()) {
+        if (query.next()) {
+            return query.value(0).toInt();
+        }
+        else {
+            return -1;
+            qDebug() << "nie znaleziono takiego obrazka w bazie danych";
+        }
+    }
+    else {
+        qDebug() << "error while getting image: " << ", " << query.lastError();
     }
 }

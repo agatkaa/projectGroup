@@ -1,3 +1,4 @@
+#include "tablica.h"
 #include "clickablelabel.h"
 #include <QDebug>
 #include <mainwindow.h>
@@ -16,8 +17,19 @@ ClickableLabel::ClickableLabel(QWidget* parent, Qt::WindowFlags f)
     : QLabel(parent) {
 
      connect(this, SIGNAL(clicked()),this, SLOT(slotClicked()));
+    tab = (Tablica*)parent;
 
      setAcceptDrops(true);
+}
+
+void ClickableLabel::setYPosition(int value)
+{
+    yPosition = value;
+}
+
+void ClickableLabel::setXPosition(int value)
+{
+    xPosition = value;
 }
 
 ClickableLabel::~ClickableLabel() {}
@@ -68,6 +80,11 @@ void ClickableLabel::dropEvent(QDropEvent *event)
     this->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
     this->setStyleSheet("border: none; background-color: yellow");
     update();
+    QString path = imageLocation.section('/', -1);
+    Repository* rep = new Repository();
+
+    rep -> saveImageInTable(tab->table.id,path,this->xPosition,this->yPosition);
+
 }
 void ClickableLabel::dragLeaveEvent(QDragLeaveEvent *event)
 {
