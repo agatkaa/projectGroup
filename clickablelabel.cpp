@@ -12,6 +12,7 @@
 #include <QMimeData>
 #include <QDebug>
 #include <QSettings>
+#include <QDrag>
 
 ClickableLabel::ClickableLabel(QWidget* parent, Qt::WindowFlags f)
     : QLabel(parent) {
@@ -40,14 +41,14 @@ void ClickableLabel::mousePressEvent(QMouseEvent* event) {
 
 void ClickableLabel::slotClicked()
 {
-//   Repository* repository = new Repository();
-//   Image* img = repository->getImages()[0];
-
-//   QPixmap pixmap(img->fullFileName);
-//   this->setPixmap(pixmap);
-//   this->setScaledContents( true );
-//   this->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
-//   update();
+    if(this->imageLocation!=""){
+        QDrag *drag = new QDrag(this);
+        imageLocation = this->imageLocation;
+        QMimeData *mime = new QMimeData;
+        mime->setText(imageLocation);
+        drag->setMimeData(mime);
+        drag->exec();
+    }
 }
 
 QString ClickableLabel::openFile()
@@ -73,7 +74,7 @@ void ClickableLabel::dragEnterEvent(QDragEnterEvent *event)
 
 void ClickableLabel::dropEvent(QDropEvent *event)
 {
-    QString imageLocation = event->mimeData()->text();
+    imageLocation = event->mimeData()->text();
     QPixmap pixmap(imageLocation);
     this->setPixmap(pixmap);
     this->setScaledContents( true );

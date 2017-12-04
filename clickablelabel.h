@@ -30,6 +30,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
+    QString imageLocation;
 
 public:
      QString openFile();
