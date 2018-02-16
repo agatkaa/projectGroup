@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // ustawienie położenia i wielkości okna do rysowania
 
 
+    // dodanie panel z zawartoscia folderu assets, wszystkie obrazy z folderu assets tam sa , mozna je przciagac za pomoca drag&drop
     for (int i=0;i<images.size();i++){
         QListWidgetItem* item = new QListWidgetItem(images.at(i)->fileName);
         item->setIcon(QIcon(images.at(i)->fullFileName));
