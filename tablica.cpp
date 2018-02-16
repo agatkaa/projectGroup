@@ -30,7 +30,7 @@ Tablica::~Tablica()
     }
 }
 
-// funkcja dodająca nowy label do listy
+// funkcja dodająca nowy label do listy, ustalanie pozycji x, y , tła labela
 void Tablica::addLabel(int n, int xPosition, int yPosition)
 {
     ClickableLabel* mylabel = new ClickableLabel(this);
@@ -58,6 +58,8 @@ void Tablica::saveTable()
 
 }
 
+
+//początkowa inicjalizacja tablicy
 void Tablica::initializeTable()
 {
     int x=0;

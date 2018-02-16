@@ -9,6 +9,7 @@ class Tablica;
 #include "repository.h"
 #include <Qt>
 
+// klasa , która definiuje 'labele' pojedyncze kwadraty, umożliwiająca klikanie w labele
 class ClickableLabel : public QLabel {
     Q_OBJECT
 
