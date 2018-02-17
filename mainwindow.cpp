@@ -51,17 +51,17 @@ MainWindow::MainWindow(QWidget *parent) :
     update();
 }
 
-void MainWindow::moveButton(QPushButton *button, int x, int y)
-{
-    // aktualna pozycja
-    QPoint position = button->pos();
+//void MainWindow::moveButton(QPushButton *button, int x, int y)
+//{
+//    // aktualna pozycja
+//    QPoint position = button->pos();
 
-    // przsunięcie przycisku
-    QPoint newPosition(position.x() + x, position.y() + y);
+//    // przsunięcie przycisku
+//    QPoint newPosition(position.x() + x, position.y() + y);
 
-    // nowa pozycja
-    button->setGeometry(QRect(newPosition.x(),newPosition.y(),41,41));
-}
+//    // nowa pozycja
+//    button->setGeometry(QRect(newPosition.x(),newPosition.y(),41,41));
+//}
 
 MainWindow::~MainWindow()
 {
@@ -225,8 +225,6 @@ void MainWindow::paintEvent(QPaintEvent *e)
     }
     //koniec tego panelu z zawartoscia folderu assets
 
-
-
 }
 
 
@@ -244,23 +242,25 @@ void MainWindow::paintEvent(QPaintEvent *e)
     }
   }
 
+ // akcja dla drag and drop obrazków w listy obrazków
  void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
  {
-     QDrag *drag = new QDrag(item->listWidget());
-     QMimeData *mime= new QMimeData;
+     QDrag *drag = new QDrag(item->listWidget());   // utworzenie obiektu drag dla obrazka z listy
+     QMimeData *mime= new QMimeData;    // obiekt przechwoujący dane dla drag and drop
 
      Image* image = (Image*) item->data(Qt::UserRole).value<Image*>();
 
      QString string (image->fullFileName);
-     mime->setText(string);
-     drag->setMimeData(mime);
+     mime->setText(string); // przypisanie nazwy obrazka do danych
+     drag->setMimeData(mime);   // dodanie danych do obiektu drag
 
+     // ustawienie i umiejscowienia ikony pojawiającej się przy akcji drag and drop
      QIcon qicon = item->icon();
      QPixmap pixmap = qicon.pixmap(24,24);
      drag->setPixmap(pixmap);
      drag->setHotSpot(QPoint(15,15));
 
-     drag->exec();
+     drag->exec();  //  rozpoczęcie akcji drag and drop
  }
 
  Tablica* MainWindow::currentTablica()
